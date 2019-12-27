@@ -37,6 +37,12 @@ class AppiumCrawler():
 
 
 
+    #登录授权
+    def authorization(self):
+        pass
+
+
+
 
     #点击“我的淘宝”
     def clickMyself(self):
