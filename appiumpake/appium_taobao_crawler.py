@@ -38,7 +38,7 @@ class AppiumCrawler():
 
 
 
-    # 点击“我的淘宝”
+    #点击“我的淘宝”
     def clickMyself(self):
         time.sleep(2)
         WebDriverWait(self.driver, 10).until(lambda x:x.find_element_by_xpath("//android.widget.FrameLayout[@content-desc=\"我的淘宝\"]/android.widget.FrameLayout/android.widget.ImageView")).click()
@@ -73,7 +73,7 @@ class AppiumCrawler():
 
 
     #点击用户名输入框并输入用户名
-    def InputUsername(self):
+    def InputUsername(self, username):
         while True:
             try:
                 elusername = WebDriverWait(self.driver, 10).until(lambda x: x.find_element_by_id("com.taobao.taobao:id/accountCompleteTextView"))
@@ -81,7 +81,7 @@ class AppiumCrawler():
                 if elusername:
                     elusername.click()
                     time.sleep(2)
-                    elusername.send_keys("金骆驿")
+                    elusername.send_keys(username)
                     break
             except AttributeError:
                 print("输入用户名重试")
@@ -90,7 +90,7 @@ class AppiumCrawler():
 
 
     #点击密码输入框并输入密码
-    def inputPwd(self):
+    def inputPwd(self, passworld):
         while True:
             try:
                 elpwd = WebDriverWait(self.driver, 10).until(lambda x: x.find_element_by_id("com.taobao.taobao:id/content"))
@@ -99,7 +99,7 @@ class AppiumCrawler():
                     print(elpwd)
                     elpwd.click()
                     time.sleep(2)
-                    elpwd.send_keys("jly1314yy1207")
+                    elpwd.send_keys(passworld)
                     break
             except AttributeError:
                 print("输入密码重试！")
@@ -122,7 +122,7 @@ class AppiumCrawler():
 
 
     #滑块验证
-    def Slide_the_slider(self):
+    def Slide_the_slider(self, passworld):
         print("开始滑块验证")
         while True:
             try:
@@ -136,7 +136,7 @@ class AppiumCrawler():
                 print(getback)
                 if getback:
                     getback.click()
-                self.inputPwd()
+                self.inputPwd(passworld)
                 self.loginclick()
 
 
@@ -171,20 +171,22 @@ class AppiumCrawler():
 
 
     #启动函数
-    def main(self):
+    def main(self, username, passworld):
         self.clickMyself()                                  #点击我的淘宝
         self.clickother()                                   #点击其他用户登录
         self.clicklogin()                                   #点击登陆
-        self.InputUsername()                                #点击用户名输入框
-        self.inputPwd()                                     #点击密码输入框
+        self.InputUsername(username)                        #点击用户名输入框
+        self.inputPwd(passworld)                            #点击密码输入框
         self.loginclick()                                   #点击登陆按钮
-        self.Slide_the_slider()                             #滑块验证
+        self.Slide_the_slider(passworld)                    #滑块验证
 
 
 
 
 if __name__ == '__main__':
+    username = input("请输入用户名>>>>>>>")
+    passworld = input("请输入密码>>>>>>>>")
     starttime = time.time()
-    AppiumCrawler().main()
+    AppiumCrawler().main(username, passworld)
     endtime = time.time()
     print("程序耗时：", endtime-starttime, "秒")
