@@ -2,7 +2,7 @@
 #-*- coding: UTF-8 -*-
 
 
-import shutil, os
+import shutil, os, re
 import time
 
 
@@ -108,11 +108,10 @@ class Dnconsole:
         process.close()
         return result
 
-        # 安装apk 指定模拟器必须已经启动
 
 
 
-
+    #安装apk 指定模拟器必须已经启动
     @staticmethod
     def install(index: int, path: str):
         shutil.copy(path, Dnconsole.share_path + str(index) + '手机淘宝.apk')
@@ -180,22 +179,33 @@ class Dnconsole:
         cmd = Dnconsole.console + 'launch --index ' + str(index)
         process = os.popen(cmd)
         result = process.read()
+        print("result: ", result)
         process.close()
         return result
 
 
 
 
-    def main(self):
-        for i in range(7, 20):
-            self.add("夜神模拟器{}".format(i))
-            self.launch(i)
+    def main(self, index):
+        self.add("雷电模拟器{}".format(index))
+        self.launch(index)
+        while True:
+            flag = self.is_running(index)
+            if flag:
+                break
+        self.install(index, "C:\\Users\\Administrator\\Documents\\雷电模拟器\\Pictures\\手机淘宝.apk")
 
+        #获取正在运行的模拟器的udid，最大的即为最新创建的模拟器
+        output = os.popen('adb devices')
+        aa = output.read()
+        udidlist = re.findall("emulator-(.*)	", aa)
+        udid = "emulator-" + max(udidlist)
+        print(udid)
 
 
 
 
 
 if __name__ == '__main__':
-    print(Dnconsole().list_running())
-    Dnconsole().install(7, "C:\\Users\\Administrator\\Documents\\雷电模拟器\\Pictures\\手机淘宝.apk")
+    # Dnconsole().main(2)
+    Dnconsole().is_running(1)

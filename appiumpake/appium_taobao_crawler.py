@@ -7,7 +7,7 @@
 appium操作淘宝，获取关键字搜索排名
 """
 from appium.webdriver.common.touch_action import TouchAction
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from appium.webdriver.webdriver import WebDriver
 from appium import webdriver
@@ -21,8 +21,8 @@ class AppiumCrawler():
         self.caps = {
             "platformName": "Android",
             "platformVersion": "5.1.1",
-            "udid": "emulator-5558",
-            "deviceName": "emulator-5558",
+            "udid": "emulator-5556",
+            "deviceName": "emulator-5556",
             "appPackage": "com.taobao.taobao",
             "appActivity": "com.taobao.tao.welcome.Welcome",
             "unicodeKeyboard": True,
@@ -39,7 +39,41 @@ class AppiumCrawler():
 
     #登录授权
     def authorization(self):
-        pass
+        try:
+            consent1 = self.driver.find_element_by_id("com.taobao.taobao:id/welcom_dialog_checkbox")
+            if consent1:
+                consent1.click()
+        except NoSuchElementException:
+            print("--------------")
+
+        try:
+            consent2 = self.driver.find_element_by_id("com.taobao.taobao:id/uik_mdButtonDefaultPositive")
+            if consent2:
+                consent2.click()
+        except NoSuchElementException:
+            print("----------------------------------------")
+
+        self.updatespk()
+
+        """不允许访问位置"""
+        try:
+            location = self.driver.find_element_by_id("com.taobao.taobao:id/uik_mdButtonDefaultNegative")
+            if location:
+                location.click()
+        except NoSuchElementException:
+            print("----------------------------------------")
+
+
+
+
+    #不允许下载更新
+    def updatespk(self):
+        try:
+            notupdate = self.driver.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.RelativeLayout[1]/android.widget.TextView")
+            if notupdate:
+                notupdate.click()
+        except NoSuchElementException:
+            print("----------------------------------------")
 
 
 
@@ -56,10 +90,14 @@ class AppiumCrawler():
     def clickother(self):
         while True:
             try:
-                time.sleep(2)
-                otheruser = WebDriverWait(self.driver, 10).until(lambda x:x.find_element_by_id("com.taobao.taobao:id/switchLogin"))
-                if otheruser:
-                    otheruser.click()
+                try:
+                    time.sleep(2)
+                    otheruser = WebDriverWait(self.driver, 3).until(lambda x:x.find_element_by_id("com.taobao.taobao:id/switchLogin"))
+                    if otheruser:
+                        otheruser.click()
+                        break
+                except TimeoutException:
+                    print("--------------新用户--------------")
                     break
             except AttributeError:
                 print("点击其他用户重试")
@@ -100,9 +138,8 @@ class AppiumCrawler():
         while True:
             try:
                 elpwd = WebDriverWait(self.driver, 10).until(lambda x: x.find_element_by_id("com.taobao.taobao:id/content"))
-
+                print(elpwd)
                 if elpwd:
-                    print(elpwd)
                     elpwd.click()
                     time.sleep(2)
                     elpwd.send_keys(passworld)
@@ -133,10 +170,19 @@ class AppiumCrawler():
         while True:
             try:
                 time.sleep(3)
-                slidertap = WebDriverWait(self.driver, 10).until(lambda x: x.find_element_by_accessibility_id(""))
-                print(slidertap)
-                TouchAction(self.driver).press(slidertap).move_to(x=720, y=354).perform()
-                break
+                try:
+                    slidertap = WebDriverWait(self.driver, 10).until(lambda x: x.find_element_by_accessibility_id(""))
+                    print(slidertap)
+                    TouchAction(self.driver).press(slidertap).move_to(x=720, y=354).perform()
+                    break
+                except TimeoutException:
+                    getback = WebDriverWait(self.driver, 10).until(
+                        lambda x: x.find_element_by_id("com.taobao.taobao:id/title_bar_back_button"))
+                    print(getback)
+                    if getback:
+                        getback.click()
+                    self.inputPwd(passworld)
+                    self.loginclick()
             except NoSuchElementException:
                 getback = WebDriverWait(self.driver, 10).until(lambda x: x.find_element_by_id("com.taobao.taobao:id/title_bar_back_button"))
                 print(getback)
@@ -178,12 +224,18 @@ class AppiumCrawler():
 
     #启动函数
     def main(self, username, passworld):
+        self.authorization()                                #登录授权
         self.clickMyself()                                  #点击我的淘宝
+        self.updatespk()
         self.clickother()                                   #点击其他用户登录
         self.clicklogin()                                   #点击登陆
+        self.updatespk()
         self.InputUsername(username)                        #点击用户名输入框
+        self.updatespk()
         self.inputPwd(passworld)                            #点击密码输入框
+        self.updatespk()
         self.loginclick()                                   #点击登陆按钮
+        self.updatespk()
         self.Slide_the_slider(passworld)                    #滑块验证
 
 
