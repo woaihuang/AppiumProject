@@ -207,5 +207,4 @@ class Dnconsole:
 
 
 if __name__ == '__main__':
-    # Dnconsole().main(2)
-    Dnconsole().is_running(1)
+    Dnconsole().main(1)

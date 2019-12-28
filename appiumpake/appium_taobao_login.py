@@ -4,7 +4,7 @@
 
 
 """
-appium操作淘宝，获取关键字搜索排名
+appium操作雷电模拟器，登陆淘宝
 """
 from appium.webdriver.common.touch_action import TouchAction
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
@@ -228,14 +228,23 @@ class AppiumCrawler():
         self.clickMyself()                                  #点击我的淘宝
         self.updatespk()
         self.clickother()                                   #点击其他用户登录
+        print("--------------点击登录--------------")
         self.clicklogin()                                   #点击登陆
+        print("--------------是否更新--------------")
         self.updatespk()
+        print("--------------输入用户--------------")
         self.InputUsername(username)                        #点击用户名输入框
+        print("--------------是否更新--------------")
         self.updatespk()
+        print("--------------输入密码--------------")
         self.inputPwd(passworld)                            #点击密码输入框
+        print("--------------是否更新--------------")
         self.updatespk()
+        print("--------------点击登陆--------------")
         self.loginclick()                                   #点击登陆按钮
+        print("--------------是否更新--------------")
         self.updatespk()
+        print("--------------滑块验证--------------")
         self.Slide_the_slider(passworld)                    #滑块验证
 
 
