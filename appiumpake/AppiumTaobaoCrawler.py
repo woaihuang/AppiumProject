@@ -19,8 +19,8 @@ import time, re
 
 
 class CrawlerTaobao():
-    def __init__(self):
-        leidiansimulatorusage.Dnconsole().launch(1)
+    def __init__(self, index):
+        leidiansimulatorusage.Dnconsole().launch(index)
 
         while True:
             flag = leidiansimulatorusage.Dnconsole().is_running(1)
@@ -70,8 +70,7 @@ class CrawlerTaobao():
                 print(NaughtyValueTag)
                 if NaughtyValueTag:
                     NaughtyValue = re.findall("淘气值 (.*)", NaughtyValueTag.text)[0]
-                    print("淘气值为：", NaughtyValue)
-                    break
+                    return NaughtyValue
             except:
                 print("获取淘气值重试")
 
@@ -95,55 +94,52 @@ class CrawlerTaobao():
 
     #点击订单搜索框
     def ClickSearch(self):
+        order = input("请输入订单号>>>>>>")
         while True:
-            order = input("请输入订单号>>>>>>")
-            if order == "quit":
-                break
-            while True:
+            try:
                 try:
-                    try:
-                        searchinput = WebDriverWait(self.driver, 3).until(lambda x: x.find_element_by_xpath("//android.webkit.WebView[@content-desc=\"订单列表\"]/android.view.View[2]/android.view.View[1]/android.view.View[1]/android.widget.EditText"))
-                        if searchinput:
-                            searchinput.click()
-                            time.sleep(3)
-                            print(order)
-                            searchinput.send_keys(order)
-                            time.sleep(2)
-                            break
-                    except TimeoutException:
-                        print("输入订单重试")
-                except:
-                    print("输入订单重试")
-            #点击搜索按钮
-            while True:
-                try:
-                    searchbut = WebDriverWait(self.driver, 3).until(lambda x: x.find_element_by_accessibility_id("搜索"))
-                    if searchbut:
-                        searchbut.click()
+                    searchinput = WebDriverWait(self.driver, 3).until(lambda x: x.find_element_by_xpath("//android.webkit.WebView[@content-desc=\"订单列表\"]/android.view.View[2]/android.view.View[1]/android.view.View[1]/android.widget.EditText"))
+                    if searchinput:
+                        searchinput.click()
+                        time.sleep(3)
+                        print(order)
+                        searchinput.send_keys(order)
+                        time.sleep(2)
                         break
                 except TimeoutException:
-                    print("点击搜索按钮重试")
-            #获取订单状态
-            StatusName = None
-            statusnum = 1
-            while True:
-                statusname = ["交易成功", "交易关闭", "卖家已发货"]
-                for i in statusname:
-                    try:
-                        OrderStatus = self.driver.find_element_by_accessibility_id("{}".format(i))
-                        if OrderStatus:
-                            OrderStatus.get_attribute("name")
-                            StatusName = i
-                            break
-                    except Exception as e:
-                        continue
-                if StatusName:
-                    print("订单状态为：", StatusName)
-                    self.driver.back()
+                    print("输入订单重试")
+            except:
+                print("输入订单重试")
+        #点击搜索按钮
+        while True:
+            try:
+                searchbut = WebDriverWait(self.driver, 3).until(lambda x: x.find_element_by_accessibility_id("搜索"))
+                if searchbut:
+                    searchbut.click()
                     break
-                if statusnum > 5:
-                    break
-                statusnum += 1
+            except TimeoutException:
+                print("点击搜索按钮重试")
+        #获取订单状态
+        StatusName = None
+        statusnum = 1
+        while True:
+            statusname = ["交易成功", "交易关闭", "卖家已发货", "充值成功"]
+            for i in statusname:
+                try:
+                    OrderStatus = self.driver.find_element_by_accessibility_id("{}".format(i))
+                    if OrderStatus:
+                        OrderStatus.get_attribute("name")
+                        StatusName = i
+                        break
+                except Exception as e:
+                    continue
+            if StatusName:
+                print("订单状态为：", StatusName)
+                self.driver.back()
+                return StatusName
+            if statusnum > 5:
+                break
+            statusnum += 1
 
 
 
@@ -153,7 +149,7 @@ class CrawlerTaobao():
         print("--------------点击我的淘宝--------------")
         self.clickMyself()
         print("--------------获取淘气值--------------")
-        self.GetNaughtyValue()
+        NaughtyValue = self.GetNaughtyValue()
         print("--------------查询订单--------------")
         self.SearchOrder()
         print("--------------获取订单状态--------------")
@@ -163,8 +159,8 @@ class CrawlerTaobao():
 
 
 if __name__ == '__main__':
-
-    CrawlerTaobao().main()
+    index = input("请输入模拟器编号>>>>>")
+    CrawlerTaobao(index).main()
 
 
 

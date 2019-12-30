@@ -3,7 +3,7 @@
 
 
 import shutil, os, re
-import time
+import time, pymysql
 
 
 
@@ -51,6 +51,15 @@ class Dnconsole:
     console = 'D:\\Changzhi\\dnplayer2\\dnconsole.exe '
     ld = 'D:\\Changzhi\\dnplayer2\\ld.exe '
     share_path = 'C:\\Users\\Administrator\\Documents\\雷电模拟器\\Pictures'
+
+
+
+
+    def __init__(self):
+        self.mysqlconn = pymysql.connect(
+
+        )
+        self.cur = self.mysqlconn.cursor()
 
 
 
@@ -179,14 +188,24 @@ class Dnconsole:
         cmd = Dnconsole.console + 'launch --index ' + str(index)
         process = os.popen(cmd)
         result = process.read()
-        print("result: ", result)
+        print("result>>>>>> ", result)
         process.close()
         return result
 
 
 
 
-    def main(self, index):
+    def main(self):
+        sql = "SELECT MAX(id) FROM appiumtable_test"
+
+        self.cur.execute(sql)
+
+        index = self.cur.fetchall()[0][0]
+        if index:
+            index = index + 1
+        else:
+            index = 1
+
         self.add("雷电模拟器{}".format(index))
         self.launch(index)
         while True:
@@ -196,15 +215,20 @@ class Dnconsole:
         self.install(index, "C:\\Users\\Administrator\\Documents\\雷电模拟器\\Pictures\\手机淘宝.apk")
 
         #获取正在运行的模拟器的udid，最大的即为最新创建的模拟器
-        output = os.popen('adb devices')
-        aa = output.read()
-        udidlist = re.findall("emulator-(.*)	", aa)
-        udid = "emulator-" + max(udidlist)
-        print(udid)
+        while True:
+            try:
+                output = os.popen('adb devices')
+                aa = output.read()
+                udidlist = re.findall("emulator-(.*)	", aa)
+                udid = "emulator-" + max(udidlist)
+                return udid
+            except Exception as E:
+                pass
+
 
 
 
 
 
 if __name__ == '__main__':
-    Dnconsole().main(1)
+    print(Dnconsole().get_list())
