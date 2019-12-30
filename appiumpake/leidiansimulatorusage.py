@@ -54,11 +54,6 @@ class Dnconsole:
 
     def __init__(self):
         self.mysqlconn = pymysql.connect(
-            host='120.27.147.99',
-            user="root",
-            password="Root_12root",
-            database="python_taobao_demo",
-            charset='utf8'
         )
         self.cur = self.mysqlconn.cursor()
 
