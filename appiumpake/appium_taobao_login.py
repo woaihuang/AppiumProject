@@ -6,11 +6,11 @@
 """
 appium操作雷电模拟器，登陆淘宝
 """
-from appiumpake import leidiansimulatorusage, AppiumTaobaoCrawler
-from appium.webdriver.common.touch_action import TouchAction
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from appium.webdriver.common.touch_action import TouchAction
 from selenium.webdriver.support.ui import WebDriverWait
 from appium.webdriver.webdriver import WebDriver
+from appiumpake import leidiansimulatorusage
 from appium import webdriver
 import time, pymysql, re
 
@@ -22,7 +22,11 @@ class AppiumCrawler():
         self.flag = True
 
         self.mysqlconn = pymysql.connect(
-
+            host='120.27.147.99',
+            user="root",
+            password="Root_12root",
+            database="python_taobao_demo",
+            charset='utf8'
         )
         self.cur = self.mysqlconn.cursor()
 
@@ -392,6 +396,6 @@ def main(username, passworld):
 
 
 if __name__ == '__main__':
-    username = input("请输入用户名>>>>>>>")
-    passworld = input("请输入密码>>>>>>>>")
+    username = "金骆驿"                         #input("请输入用户名>>>>>>>")
+    passworld = "jly1314yy1207"                #input("请输入密码>>>>>>>>")
     main(username, passworld)

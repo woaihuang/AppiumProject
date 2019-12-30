@@ -6,12 +6,10 @@
 """
 appium操作雷电模拟器，抓取淘宝信息
 """
-from appium.webdriver.common.touch_action import TouchAction
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
-from appium.webdriver.webdriver import WebDriver
-from appium import webdriver
 from appiumpake import leidiansimulatorusage
+from appium import webdriver
 import time, re
 
 
@@ -123,7 +121,7 @@ class CrawlerTaobao():
         StatusName = None
         statusnum = 1
         while True:
-            statusname = ["交易成功", "交易关闭", "卖家已发货", "充值成功"]
+            statusname = ["交易成功", "交易关闭", "卖家已发货"]
             for i in statusname:
                 try:
                     OrderStatus = self.driver.find_element_by_accessibility_id("{}".format(i))
@@ -161,10 +159,3 @@ class CrawlerTaobao():
 if __name__ == '__main__':
     index = input("请输入模拟器编号>>>>>")
     CrawlerTaobao(index).main()
-
-
-
-
-
-
-

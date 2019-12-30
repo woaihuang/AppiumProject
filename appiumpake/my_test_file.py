@@ -33,8 +33,7 @@ class DnPlayer(object):
         bwh = self.bind_win_handler
         pid = self.pid
         vpid = self.vbox_pid
-        return "\nindex:%d name:%s top:%08X bind:%08X running:%s pid:%d vbox_pid:%d\n" % (
-            index, name, twh, bwh, r, pid, vpid)
+        return "\nindex:%d name:%s top:%08X bind:%08X running:%s pid:%d vbox_pid:%d\n" % (index, name, twh, bwh, r, pid, vpid)
 
     def __repr__(self):
         index = self.index
@@ -44,8 +43,7 @@ class DnPlayer(object):
         bwh = self.bind_win_handler
         pid = self.pid
         vpid = self.vbox_pid
-        return "\nindex:%d name:%s top:%08X bind:%08X running:%s pid:%d vbox_pid:%d\n" % (
-            index, name, twh, bwh, r, pid, vpid)
+        return "\nindex:%d name:%s top:%08X bind:%08X running:%s pid:%d vbox_pid:%d\n" % (index, name, twh, bwh, r, pid, vpid)
 
 
 
@@ -55,13 +53,14 @@ class Dnconsole:
     ld = 'D:\\Changzhi\\dnplayer2\\ld.exe '
     share_path = 'C:\\Users\\Administrator\\Documents\\雷电模拟器\\Pictures'
 
-
-
-
     def __init__(self, index):
         self.index = index
         self.mysqlconn = pymysql.connect(
-
+            host='120.27.147.99',
+            user="root",
+            password="Root_12root",
+            database="python_taobao_demo",
+            charset='utf8'
         )
         self.cur = self.mysqlconn.cursor()
 
