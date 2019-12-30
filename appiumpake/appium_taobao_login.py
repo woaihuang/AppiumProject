@@ -391,6 +391,6 @@ def main(username, passworld):
 
 
 if __name__ == '__main__':
-    username = "金骆驿"                         #input("请输入用户名>>>>>>>")
-    passworld = "jly1314yy1207"                #input("请输入密码>>>>>>>>")
+    username = input("请输入用户名>>>>>>>")
+    passworld = input("请输入密码>>>>>>>>")
     main(username, passworld)
